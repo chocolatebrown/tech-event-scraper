@@ -34,7 +34,7 @@ class NasscomSpider(scrapy.Spider):
                         })
 
     def spider_closed(self):
-        with open('NasscomEvent.json', 'w') as file:
+        with open('tech events/NasscomEvent.json', 'w') as file:
             json.dump(event_data, file)
 
 

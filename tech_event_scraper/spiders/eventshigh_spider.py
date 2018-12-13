@@ -42,7 +42,7 @@ class EventshighSpider(scrapy.Spider):
             print(event_data)
 
     def spider_closed(self):
-        with open('EventshighEvents.json', 'w', encoding='utf-8') as file:
+        with open('tech events/EventshighEvents.json', 'w', encoding='utf-8') as file:
             json.dump(event_data, file, ensure_ascii=False)
 
 
