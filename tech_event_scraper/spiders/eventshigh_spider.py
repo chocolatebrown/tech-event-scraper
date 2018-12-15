@@ -36,13 +36,13 @@ class EventshighSpider(scrapy.Spider):
                     'event_date': event_date,
                     'event_venue': event_venue,
                     'event_city': event_city,
-                    'event_description': event_description,
+                    'event_fee': event_description,
                     'event_url': event_url
                 })
             print(event_data)
 
     def spider_closed(self):
-        with open('tech events/EventshighEvents.json', 'w', encoding='utf-8') as file:
+        with open('../tech events/EventshighEvents.json', 'w', encoding='utf-8') as file:
             json.dump(event_data, file, ensure_ascii=False)
 
 

@@ -20,11 +20,14 @@ class NasscomSpider(scrapy.Spider):
         for item in response.xpath("//div[@class='view-content']//div[@class='item-list']//li"):
             event_title = item.xpath("div[@class='views-field views-field-title']//span//text()").extract_first().strip()
             event_url = 'https://www.nasscom.in' + item.xpath("div[@class='views-field views-field-title']//span//a/@href").extract_first()
-            date_string = item.xpath("div[@class='views-field-field-event-time']//span//text()").extract_first()
-            event_date = re.findall("(.*) \| (.*)",date_string)[0][0]
-            event_time = re.findall("(.*) \| (.*)",date_string)[0][1]
+            try:
+                date_string = " ".join(item.xpath("div[@class='views-field-field-event-time']//text()").extract())
+                event_date = re.findall("(.*) \| (.*)", date_string)[0][0].strip("\n\r")
+                event_time = re.findall("(.*) \| (.*)", date_string)[0][1].strip("\n\r")
+            except IndexError:
+                pass
             event_venue = item.xpath("div[@class='views-field-field-description-security']//div//text()").extract_first().strip()
-            event_data['Events'].append(
+            event_data['Nasscom Events'].append(
                         {
                             'event_title': event_title,
                             'event_date': event_date,
@@ -34,8 +37,8 @@ class NasscomSpider(scrapy.Spider):
                         })
 
     def spider_closed(self):
-        with open('tech events/NasscomEvent.json', 'w') as file:
-            json.dump(event_data, file)
+        with open('../tech events/NasscomEvent.json', 'w', encoding='utf-8') as file:
+            json.dump(event_data, file, ensure_ascii=False)
 
 
 
