@@ -58,6 +58,6 @@ class TentimesSpider(scrapy.Spider):
                 break
 
     def spider_closed(self):
-        with open('../tech events/10times.json', 'w') as file:
-            json.dump(event_data, file)
+        with open('../tech events/10times.json', 'w', encoding='utf-8') as file:
+            json.dump(event_data, file, ensure_ascii=False)
 
