@@ -27,15 +27,24 @@ class NasscomSpider(scrapy.Spider):
             except IndexError:
                 pass
             event_venue = item.xpath("div[@class='views-field-field-description-security']//div//text()").extract_first().strip()
+            try:
+                event_city = re.findall(", (.*?),", event_venue)[-1]
+            except IndexError:
+                event_city = None
             event_data['Nasscom Events'].append(
                         {
                             'event_title': event_title,
-                            'event_date': event_date,
-                            'event_time': event_time,
                             'event_venue': event_venue,
-                            'event_url': event_url
-                        })
+                            'event_description': None,
+                            'event_url': event_url,
+                            'event_date': event_date,
+                            'event_keywords': None,
+                            'event_fee': None,
+                            'event_city': event_city,
+                            'event_time': event_time,
 
+                        })
+            print(event_data)
     def spider_closed(self):
         with open('../tech events/NasscomEvent.json', 'w', encoding='utf-8') as file:
             json.dump(event_data, file, ensure_ascii=False)
