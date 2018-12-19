@@ -39,16 +39,20 @@ class TentimesSpider(scrapy.Spider):
                             event_status = ''
                         event_url = row.xpath("td[2]//a/@href").extract_first()
                         event_title = row.xpath("td[2]//text()").extract_first()
-                        event_venue = ",".join(row.xpath("td[3]//a//text()").extract())
+                        event_venue = ", ".join(row.xpath("td[3]//a//text()").extract())
                         event_description = row.xpath("td[4]//text()").extract_first()
+                        event_keywords = ", ".join([e.strip() for e in row.xpath("td[5]//text()").extract() if e.strip()])
                         event_data['10times Events'].append(
                             {
                                 'event_title': event_title,
-                                'event_date': event_date,
-                                'event_status': event_status,
                                 'event_venue': event_venue,
                                 'event_description': event_description,
-                                'event_url': event_url
+                                'event_url': event_url,
+                                'event_date': event_date,
+                                'event_keywords': event_keywords,
+                                'event_fee': None,
+                                'event_city': event_venue,
+                                'event_time': event_status,
                             })
             elif r.status_code == 403:
                 break
