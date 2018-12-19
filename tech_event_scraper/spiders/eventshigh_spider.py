@@ -3,8 +3,24 @@ import re
 from scrapy import signals
 import json
 from datetime import datetime
+from dotenv import load_dotenv
+import pyrebase
+import os
 
+load_dotenv()
 event_data = {}
+json_enabled = True
+config = {
+            "apiKey": os.getenv('apiKey'),
+            "authDomain": os.getenv('authDomain'),
+            "databaseURL": os.getenv('databaseURL'),
+            "storageBucket": os.getenv('storageBucket'),
+            "serviceAccount": os.getenv('serviceAccount')
+         }
+
+firebase = pyrebase.initialize_app(config)
+db = firebase.database()
+
 
 class EventshighSpider(scrapy.Spider):
     name = "eventshigh_spider"
@@ -45,8 +61,7 @@ class EventshighSpider(scrapy.Spider):
                 event_time = None
             except:
                 event_time = None
-            event_data['Eventshigh Events'].append(
-                {
+            event_data['Eventshigh Events'].append({
                     'event_title': event_title,
                     'event_venue': event_venue,
                     'event_description': None,
@@ -57,9 +72,22 @@ class EventshighSpider(scrapy.Spider):
                     'event_city': event_city,
                     'event_time': event_time,
                 })
+            db_data = {
+                    'event_title': event_title,
+                    'event_venue': event_venue,
+                    'event_description': None,
+                    'event_url': event_url,
+                    'event_date': event_date,
+                    'event_keywords': event_keywords,
+                    'event_fee': event_fee,
+                    'event_city': event_city,
+                    'event_time': event_time,
+                }
+            db.child("tech-conferences").child("eventshigh").push(db_data)
 
     def spider_closed(self):
-        with open('../tech events/EventshighEvents.json', 'w', encoding='utf-8') as file:
-            json.dump(event_data, file, ensure_ascii=False)
+        if json_enabled:
+            with open('../tech events/EventshighEvents.json', 'w', encoding='utf-8') as file:
+                json.dump(event_data, file, ensure_ascii=False)
 
 
