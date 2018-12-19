@@ -9,6 +9,7 @@ import os
 
 load_dotenv()
 event_data = {}
+# set True to enable json file
 json_enabled = True
 config = {
             "apiKey": os.getenv('apiKey'),
